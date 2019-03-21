@@ -35,12 +35,12 @@ $(function() {
 /*
 set the table of the predictions 
 */
-function setTable(top5, probs) {
+function setTable(top_count, probs) {
     //loop over the predictions 
-    for (var i = 0; i < top5.length; i++) {
+    for (var i = 0; i < top_count.length; i++) {
         let sym = document.getElementById('sym' + (i + 1))
         let prob = document.getElementById('prob' + (i + 1))
-        sym.innerHTML = top5[i]
+        sym.innerHTML = top_count[i]
         prob.innerHTML = Math.round(probs[i] * 100)
     }
     //create the pie 
@@ -118,8 +118,9 @@ function getFrame() {
         const pred = model.predict(preprocess(imgData)).dataSync()
 
         //find the top 5 predictions 
-        const indices = findIndicesOfMax(pred, 5)
-        const probs = findTopValues(pred, 5)
+        const display_num = 20
+        const indices = findIndicesOfMax(pred, display_num)
+        const probs = findTopValues(pred, display_num)
         const names = getClassNames(indices)
 
         //set the table 
