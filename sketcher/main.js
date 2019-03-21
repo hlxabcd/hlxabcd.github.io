@@ -142,8 +142,8 @@ function getClassNames(indices) {
 load the class names 
 */
 async function loadDict() {
-    if (mode == 'ar')
-        loc = 'modelall/class_names_ar.txt'
+    if (mode == 'zh')
+        loc = 'modelall/class_names_zh.txt'
     else
         loc = 'modelall/class_names.txt'
     
