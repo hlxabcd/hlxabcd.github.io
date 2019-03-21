@@ -118,7 +118,7 @@ function getFrame() {
         const pred = model.predict(preprocess(imgData)).dataSync()
 
         //find the top 5 predictions 
-        const display_num = 20
+        const display_num = 10
         const indices = findIndicesOfMax(pred, display_num)
         const probs = findTopValues(pred, display_num)
         const names = getClassNames(indices)
