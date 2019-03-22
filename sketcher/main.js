@@ -36,13 +36,26 @@ $(function() {
 set the table of the predictions 
 */
 function setTable(top_count, probs) {
-    //loop over the predictions 
+    //loop over the predictions
+    $('.pieID.legend li').remove()
     for (var i = 0; i < top_count.length; i++) {
-        let sym = document.getElementById('sym' + (i + 1))
-        let prob = document.getElementById('prob' + (i + 1))
-        sym.innerHTML = top_count[i]
-        prob.innerHTML = Math.round(probs[i] * 100)
+        // let sym = document.getElementById('sym' + (i + 1))
+        // let prob = document.getElementById('prob' + (i + 1))
+        // sym.innerHTML = top_count[i]
+        // prob.innerHTML = Math.round(probs[i] * 100)
+
+
+        $('.pieID.legend').append('<li>' +
+            '<em id = "'+'sym' + (i + 1)+'">' +
+            top_count[i]+
+            '</em>' +
+            '<span id = "'+'prob' + (i + 1)+'" >' +
+            Math.round(probs[i] * 100)
+            +'</span></li>');
+
     }
+
+
     //create the pie 
     createPie(".pieID.legend", ".pieID.pie");
 
@@ -118,7 +131,7 @@ function getFrame() {
         const pred = model.predict(preprocess(imgData)).dataSync()
 
         //find the top 5 predictions 
-        const display_num = 5
+        const display_num = 20
         const indices = findIndicesOfMax(pred, display_num)
         const probs = findTopValues(pred, display_num)
         const names = getClassNames(indices)
@@ -201,7 +214,8 @@ function preprocess(imgData) {
     return tf.tidy(() => {
         //convert to a tensor 
         let tensor = tf.browser.fromPixels(imgData, numChannels = 1)
-        
+        var img = tf.browser.toPixels(tensor);
+
         //resize 
         const resized = tf.image.resizeBilinear(tensor, [28, 28]).toFloat()
         
