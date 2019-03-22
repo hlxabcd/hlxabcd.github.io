@@ -172,7 +172,7 @@ load the class names
 */
 function success(data) {
     const lst = data.split(/\n/)
-    for (var i = 0; i < lst.length - 1; i++) {
+    for (var i = 0; i < lst.length; i++) {
         let symbol = lst[i]
         classNames[i] = symbol
     }
