@@ -8,6 +8,11 @@ var canvas;
 var coords = [];
 var mousePressed = false;
 var mode;
+var randomWord;
+var sec=60;
+var score =0;
+modelPath = 'model_100';
+//modelPath = 'model_345_50000';
 
 /*
 prepare the drawing canvas 
@@ -43,7 +48,13 @@ function setTable(top_count, probs) {
         // let prob = document.getElementById('prob' + (i + 1))
         // sym.innerHTML = top_count[i]
         // prob.innerHTML = Math.round(probs[i] * 100)
-
+        if(randomWord == top_count[i])
+        {
+            updateWord()
+            resetSec()
+            score++
+            document.getElementById('score').innerHTML = '得分:'+score
+        }
 
         $('.pieID.legend').append('<li>' +
             '<em id = "'+'sym' + (i + 1)+'">' +
@@ -131,7 +142,7 @@ function getFrame() {
         const pred = model.predict(preprocess(imgData)).dataSync()
 
         //find the top 5 predictions 
-        const display_num = 20
+        const display_num = 15
         const indices = findIndicesOfMax(pred, display_num)
         const probs = findTopValues(pred, display_num)
         const names = getClassNames(indices)
@@ -157,9 +168,9 @@ load the class names
 */
 async function loadDict() {
     if (mode == 'zh')
-        loc = 'modelall/class_names_zh.txt'
+        loc = modelPath + '/class_names_zh.txt'
     else
-        loc = 'modelall/class_names.txt'
+        loc = modelPath + '/class_names.txt'
     
     await $.ajax({
         url: loc,
@@ -176,6 +187,8 @@ function success(data) {
         let symbol = lst[i]
         classNames[i] = symbol
     }
+    updateWord()
+    setInterval('countDown()',1000);
 }
 
 /*
@@ -237,7 +250,7 @@ async function start(cur_mode) {
     mode = cur_mode
     
     //load the model 
-    model = await tf.loadLayersModel('modelall/model.json')
+    model = await tf.loadLayersModel(modelPath+'/model.json')
     
     //warm up 
     model.predict(tf.zeros([1, 28, 28, 1]))
@@ -257,12 +270,38 @@ function allowDrawing() {
     if (mode == 'en')
         document.getElementById('status').innerHTML = 'Model Loaded';
     else
-        document.getElementById('status').innerHTML = 'تم التحميل';
+        document.getElementById('status').innerHTML = '加载完毕';
     $('button').prop('disabled', false);
     var slider = document.getElementById('myRange');
     slider.oninput = function() {
         canvas.freeDrawingBrush.width = this.value;
     };
+}
+
+function updateWord()
+{
+    var classNames_len = classNames.length
+    randomWord = classNames[Math.ceil(Math.random()*classNames_len)]
+    document.getElementById('status').innerHTML = randomWord;
+}
+
+
+
+function countDown()
+{
+    sec--;
+    if(sec < 0)
+    {
+        resetSec()
+        updateWord()
+    }
+    document.getElementById('sec').innerHTML = sec
+
+}
+
+function resetSec()
+{
+    sec = 60
 }
 
 /*
