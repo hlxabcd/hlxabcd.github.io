@@ -11,8 +11,8 @@ var mode;
 var randomWord;
 var sec=60;
 var score =0;
-modelPath = 'model_100';
-//modelPath = 'model_345_50000';
+// modelPath = 'model_100';
+modelPath = 'model_345_50000';
 
 /*
 prepare the drawing canvas 
@@ -137,9 +137,11 @@ function getFrame() {
 
         //get the image data from the canvas 
         const imgData = getImageData()
-
+        const tensor = preprocess(imgData)
+        const tensorData =tensor.squeeze().arraySync()
+        console.log(JSON.stringify( tensorData ));
         //get the prediction 
-        const pred = model.predict(preprocess(imgData)).dataSync()
+        const pred = model.predict(tensor).dataSync()
 
         //find the top 5 predictions 
         const display_num = 15
