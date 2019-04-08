@@ -1,0 +1,5 @@
+aircraft_carrier
+airplane
+alarm_clock
+ambulance
+angel
